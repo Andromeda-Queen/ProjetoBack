@@ -12,13 +12,13 @@ module.exports = {
     },
     async postLogin(req, res) {
         var user = {
-            login: req.body.login
+            nome: req.body.nome
         }
-        db.Usuario.findAll({ where: { login: req.body.login, senha: req.body.senha } }
+        db.Usuario.findAll({ where: { nome: req.body.nome, senha: req.body.senha } }
         ).then(usuarios => {
             if (usuarios.length > 0) {
-                req.session.login = req.body.login;
-                res.locals.login = req.body.login; 
+                req.session.nome = req.body.nome;
+                res.locals.nome = req.body.nome;
                 if (usuarios[0].dataValues.tipo == 2) {
                     req.session.tipo = usuarios[0].dataValues.tipo;
                     res.locals.admin = true;
