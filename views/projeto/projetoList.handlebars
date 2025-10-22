@@ -1,0 +1,29 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Link Externo</th>
+            <th scope="col">Descrição</th>
+            <th scope="col">Palavras-Chave</th>
+            <th scope="col">Editar</th>
+            <th scope="col">Deletar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each receitas}}
+        <tr>
+            <th scope="row">{{nome}}</th>
+            <td>{{linkExterno}}</td>
+            <td>{{descricao}}</td>
+            <td>
+                {{#each palavrasChave}}
+                    <span class="badge bg-secondary">{{palavraChave}}</span>
+                {{/each}}
+            </td>
+
+            <td><a href="receitaUpdate/{{id}}">Editar</a></td>
+            <td><a href="receitaDelete/{{id}}">Deletar</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
