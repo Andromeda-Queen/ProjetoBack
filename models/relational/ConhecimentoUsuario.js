@@ -1,9 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const ConhecimentoUsuario = sequelize.define('conhecimento_usuario', {
-        // id: {
-        //     type: Sequelize.INTEGER,
-        //     autoIncrement: true, allowNull: false, primaryKey: true
-        // },
+    const ConhecimentoUsuario = sequelize.define('conhecimentoUsuario', {
         escala: {
             type: Sequelize.STRING, allowNull: false
         }

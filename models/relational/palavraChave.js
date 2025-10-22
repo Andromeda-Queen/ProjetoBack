@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Projeto = sequelize.define('projeto', {
+    const PalavraChave = sequelize.define('palavraChave', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true, allowNull: false, primaryKey: true
@@ -8,5 +8,5 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING, allowNull: false
         },
     });
-    return Projeto;
+    return PalavraChave;
 }
