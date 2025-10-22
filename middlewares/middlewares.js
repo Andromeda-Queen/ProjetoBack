@@ -4,8 +4,8 @@ module.exports = {
         next();
     },
     sessionControl(req, res, next) {
-        if (req.session.nome != undefined) {
-            res.locals.nome = req.session.nome;
+        if (req.session.login != undefined) {
+            res.locals.login = req.session.login;
             if (req.session.tipo == 2) {
                 res.locals.admin = true
             }

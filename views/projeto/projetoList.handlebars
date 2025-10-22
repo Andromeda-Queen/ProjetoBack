@@ -10,7 +10,7 @@
         </tr>
     </thead>
     <tbody>
-        {{#each receitas}}
+        {{#each projeto}}
         <tr>
             <th scope="row">{{nome}}</th>
             <td>{{linkExterno}}</td>
@@ -21,8 +21,8 @@
                 {{/each}}
             </td>
 
-            <td><a href="receitaUpdate/{{id}}">Editar</a></td>
-            <td><a href="receitaDelete/{{id}}">Deletar</a></td>
+            <td><a href="projetoUpdate/{{id}}">Editar</a></td>
+            <td><a href="projetoDelete/{{id}}">Deletar</a></td>
         </tr>
         {{/each}}
     </tbody>
