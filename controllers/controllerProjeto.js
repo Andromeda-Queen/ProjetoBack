@@ -1,6 +1,6 @@
 const db = require('../config/db_sequelize');
 const path = require('path');
-const { getCreate } = require('./controllerReceita');
+const { getCreate } = require('./controllerProjeto');
 
 module.exports = {
     async getCreate(req, res) {

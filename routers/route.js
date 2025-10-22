@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../config/db_sequelize');
 const controllerUsuario = require('../controllers/controllerUsuario');
+const controllerPalavraChave = require('../controllers/controllerPalavraChave');
 const route = express.Router();
 
 db.sequelize.sync({force: false}).then(() => {
@@ -33,15 +34,15 @@ route.get("/usuarioUpdate/:id", controllerUsuario.getUpdate);
 route.post("/usuarioUpdate", controllerUsuario.postUpdate);
 route.get("/usuarioDelete/:id", controllerUsuario.getDelete);
 
-// //Controller PalavraChave
-// route.get("/palavraChaveCreate", controllerPalavraChave.getCreate);
-// route.post("/palavraChaveCreate", controllerPalavraChave.postCreate);
-// route.get("/palavraChaveList", controllerPalavraChave.getList);
-// route.get("/palavraChaveUpdate/:id", controllerPalavraChave.getUpdate);
-// route.post("/palavraChaveUpdate", controllerPalavraChave.postUpdate);
-// route.get("/palavraChaveDelete/:id", controllerPalavraChave.getDelete);
+//Controller PalavraChave
+route.get("/palavraChaveCreate", controllerPalavraChave.getCreate);
+route.post("/palavraChaveCreate", controllerPalavraChave.postCreate);
+route.get("/palavraChaveList", controllerPalavraChave.getList);
+route.get("/palavraChaveUpdate/:id", controllerPalavraChave.getUpdate);
+route.post("/palavraChaveUpdate", controllerPalavraChave.postUpdate);
+route.get("/palavraChaveDelete/:id", controllerPalavraChave.getDelete);
 
-// //Controller Projeto
+//Controller Projeto
 // route.get("/projetoCreate", controllerProjeto.getCreate);
 // route.post("/projetoCreate", controllerProjeto.postCreate);
 // route.get("/projetoList", controllerProjeto.getList);

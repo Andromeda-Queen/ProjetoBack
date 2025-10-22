@@ -25,51 +25,54 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="/home">Home <span class="sr-only"></span></a>
                     </li>
+                    {{#if admin}}
                     <li class="nav-item dropdown">
+                        
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Usuários
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {{#if admin}}
                             <a class="dropdown-item" href="/usuarioCreate">Criar</a>
-                            {{/if}}
                             <a class="dropdown-item" href="/usuarioList">Listar</a>
+                            
                         </div>
+                        
                     </li>
+                    {{/if}}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Categorias
+                            Conhecimentos
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {{#if admin}}
-                            <a class="dropdown-item" href="/categoriaCreate">Criar</a>
+                            <a class="dropdown-item" href="/conhecimentoCreate">Criar</a>
                             {{/if}}
-                            <a class="dropdown-item" href="/categoriaList">Listar</a>
+                            <a class="dropdown-item" href="/conhecimentoList">Listar</a>
                         </div>
                     </li>
+                    {{#if admin}}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Receitas
+                            Palavras-Chave
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {{#if admin}}
-                            <a class="dropdown-item" href="/receitaCreate">Criar</a>
-                            {{/if}}<a class="dropdown-item" href="/receitaList">Listar</a>
+                            <a class="dropdown-item" href="/palavraChaveCreate">Criar</a>
+                            <a class="dropdown-item" href="/palavraChaveList">Listar</a>
                         </div>
                     </li>
+                    {{/if}}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Comentários
+                            Projetos
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {{#if admin}}
-                            <a class="dropdown-item" href="/comentarioCreate">Criar</a>
-                            {{/if}}
-                            <a class="dropdown-item" href="/comentarioList">Listar</a>
+
+                            <a class="dropdown-item" href="/projetoCreate">Criar</a>
+                            <a class="dropdown-item" href="/projetoList">Listar</a>
                         </div>
                     </li>
                     <li class="nav-item">
