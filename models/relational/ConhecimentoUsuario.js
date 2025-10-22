@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
     const ConhecimentoUsuario = sequelize.define('conhecimentoUsuario', {
         escala: {
-            type: Sequelize.STRING, allowNull: false
+            type: Sequelize.INTEGER, allowNull: false
         }
     });
     return ConhecimentoUsuario
