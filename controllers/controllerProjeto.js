@@ -1,10 +1,17 @@
 const db = require('../config/db_sequelize');
 const path = require('path');
+const { getCreate } = require('./controllerReceita');
 
 module.exports = {
+    async getCreate(req, res) {
+        var palavrasChaveIds = await db.PalavraChave.findAll()
+        res.render('projeto/projetoCreate', {
+            palavrasChaveIds: palavrasChaveIds.map(palavraChave => palavraChave.toJSON())
+        });
+    },
     async postCreate(req, res) {
-        const {nome, linkExterno, resumo} = req.body;
-        db.Projeto.create({nome, linkExterno, resumo})
+        const {nome, linkExterno, resumo, palavraChaveId} = req.body;
+        db.Projeto.create({nome, linkExterno, resumo, palavraChaveId})
             .then(() => {
                 res.redirect('/home')
             })
@@ -13,7 +20,7 @@ module.exports = {
             });
     },
     async getList(req, res) {
-        db.Receita.findAll().then(projetos => {
+        db.Projeto.findAll().then(projetos => {
             res.render('projetos/projetoList',
                 { projetos: projetos.map(projeto => projeto.toJSON()) });
         }).catch((err) => {
@@ -21,26 +28,24 @@ module.exports = {
         });
     },
     async getUpdate(req, res) {
-        await db.Receita.findByPk(req.params.id).then(
-            receita => res.render('receita/receitaUpdate',
+        await db.Projeto.findByPk(req.params.id).then(
+            projeto => res.render('projeto/projetoUpdate',
                 {
-                    receita: receita.dataValues,
-                    categorias: categorias.map(categoria => categoria.toJSON())
+                    projeto: projeto.dataValues,
+                    palavraChave: palavraChave.map(palavraChave => palavraChave.toJSON())
                 })
         ).catch(function (err) {
             console.log(err);
         });
     },
     async postUpdate(req, res) {
-        const {nome, ingredientes, preparo, categoriaId} = req.body;
-        const imagem = req.imageName;
+        const {nome, linkExterno, resumo, palavraChaveId} = req.body;
         try {
             await db.Receita.update({
                 nome,
-                ingredientes,
-                preparo,
-                categoriaId,
-                imagem
+                linkExterno,
+                resumo,
+                palavraChaveId,
             }, {
                 where: { id: req.body.id }
             });
@@ -51,7 +56,7 @@ module.exports = {
         }
     },
     async getDelete(req, res) {
-        await db.Receita.destroy({ where: { id: req.params.id } }).then(
+        await db.Projeto.destroy({ where: { id: req.params.id } }).then(
             res.render('home')
         ).catch(err => {
             console.log(err);

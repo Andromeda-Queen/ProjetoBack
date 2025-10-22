@@ -1,0 +1,24 @@
+<form action="/projetoUpdate" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value={{projeto.id}}>
+    <div class="form-group">
+        <label for="inputNome">Nome</label>
+        <input type="text" class="form-control" id="inputNome" name="nome">
+    </div>
+    <div class="form-group">
+        <label for="inputLinkExterno">Link externo</label>
+        <input type="text" class="form-control" id="inputLinkExterno" name="linkExterno">
+    </div>
+    <div class="form-group">
+        <label for="inputDescricao">Descrição</label>
+        <input type="text" class="form-control" id="inputDescricao" name="descricao">
+    </div>
+    <label for="palavrasChaveId">Palavras-chave:</label>
+    <select name="palavrasChaveId[]" id="palavrasChaveId" multiple size="5">
+        {{#each palavrasChaveIds}}
+            <option value="{{id}}">{{nome}}</option>
+        {{/each}}
+    </select>
+    <br> <br>
+    <button type="submit" class="btn btn-primary">Editar</button>
+        
+</form>
