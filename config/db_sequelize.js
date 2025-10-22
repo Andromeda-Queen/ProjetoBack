@@ -8,8 +8,8 @@ var db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.Usuario = require('../models/relational/Usuario.js')(sequelize, Sequelize);
-db.Projeto = require('../models/relational/Projeto.js')(sequelize, Sequelize);
-db.PalavraChave = require('../models/relational/PalavraChave.js')(sequelize, Sequelize);
+db.Projeto = require('../models/relational/projeto.js')(sequelize, Sequelize);
+db.PalavraChave = require('../models/relational/palavraChave.js')(sequelize, Sequelize);
 db.Conhecimento = require('../models/relational/Conhecimento.js')(sequelize, Sequelize);
 
 // Relações N:N
