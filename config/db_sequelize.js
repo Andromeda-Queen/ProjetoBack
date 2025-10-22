@@ -8,8 +8,22 @@ var db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.Usuario = require('../models/relational/usuario.js')(sequelize, Sequelize);
-db.Receita = require('../models/relational/receita.js')(sequelize, Sequelize);
-db.Categoria = require('../models/relational/categoria.js')(sequelize, Sequelize);
-db.Categoria.hasMany(db.Receita, {foreignKey:'categoriaId', onDelete: 'NO ACTION'});
+db.Projeto = require('../models/relational/projeto.js')(sequelize, Sequelize);
+db.PalavraChave = require('../models/relational/palavraChave.js')(sequelize, Sequelize);
+db.Conhecimento = require('../models/relational/conhecimento.js')(sequelize, Sequelize);
+db.ConhecimentoUsuario = require('../models/relational/ConhecimentoUsuario.js')(sequelize, Sequelize);
+
+db.Usuario.belongsToMany(db.Conhecimento, {
+  through: db.ConhecimentoUsuario,
+  //foreignKey: 'usuarioId',
+  //otherKey: 'conhecimentoId'
+});
+db.Conhecimento.belongsToMany(db.Usuario, {
+  through: db.ConhecimentoUsuario,
+  //foreignKey: 'conhecimentoId',
+  //otherKey: 'usuarioId'
+});
+
+
 module.exports = db;
 

@@ -1,12 +1,12 @@
 module.exports = (sequelize, Sequelize) => {
-    const Projeto = sequelize.define('projeto', {
+    const Conhecimento = sequelize.define('conhecimento', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true, allowNull: false, primaryKey: true
         },
-        palavraChave: {
+        conhecimento: {
             type: Sequelize.STRING, allowNull: false
-        },
+        }
     });
-    return Projeto;
+    return Conhecimento
 }

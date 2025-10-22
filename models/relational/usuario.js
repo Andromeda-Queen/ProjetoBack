@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             autoIncrement: true, allowNull: false, primaryKey: true
         },
-        login: {
+        nome: {
             type: Sequelize.STRING, allowNull: false
         },
         senha: {

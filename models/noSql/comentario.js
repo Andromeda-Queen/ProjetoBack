@@ -6,5 +6,4 @@ const Comentario = Schema({
     texto: { type: String, required: true },
     autor: { type: String, required: true }
 });
-
 module.exports = mongoose.model("Comentario", Comentario)
