@@ -1,0 +1,26 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Login</th>
+            <th scope="col">Senha</th>
+            <th scope="col">Tipo</th>
+            {{#if admin}}
+            <th scope="col">Editar</th>
+            <th scope="col">Deletar</th>
+            {{/if}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#each usuarios}}
+        <tr>
+            <th scope="row">{{login}}</th>
+            <td>{{senha}}</td>
+            <td>{{tipo}}</td>
+            {{#if ../admin}}
+            <td><a href="usuarioUpdate/{{id}}">Editar</a></td>
+            <td><a href="usuarioDelete/{{id}}">Deletar</a></td>
+            {{/if}}
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

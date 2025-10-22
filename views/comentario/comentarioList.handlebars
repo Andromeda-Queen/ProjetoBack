@@ -1,0 +1,18 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Titulo</th>
+            <th scope="col">Texto</th>
+            <th scope="col">Autor</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each comentarios}}
+        <tr>
+            <th scope="row">{{titulo}}</th>
+            <td>{{texto}}</td>
+            <td>{{autor}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

@@ -1,0 +1,8 @@
+<form action="/categoriaUpdate" method="post">
+    <input type="hidden" name="id" value={{categoria.id}}>
+    <div class="form-group">
+        <label for="inputNome">Nome</label>
+        <input type="text" class="form-control" id="inputNome" name="nome" value="{{categoria.nome}}">
+    </div>
+    <button type="submit" class="btn btn-primary">Editar</button>
+</form>

@@ -1,0 +1,29 @@
+<form action="/receitaCreate" method="post" enctype="multipart/form-data">​
+    <div class="form-group">
+        <label for="inputNome">Nome</label>
+        <input type="text" class="form-control" id="inputNome" name="nome">
+    </div>
+    <div class="form-group">
+        <label for="inputIngredientes">Ingredientes</label>
+        <input type="text" class="form-control" id="inputIngredientes" name="ingredientes">
+    </div>
+    <div class="form-group">
+        <label for="inputPreparo">Preparo</label>
+        <input type="text" class="form-control" id="inputPreparo" name="preparo">
+    </div>
+    <div class="form-group">
+        <label for="inputImagem">Imagem</label>
+        <input type="file" class="form-control" id="inputImagem" name="imagem">
+    </div>
+    Categoria:
+    <select name="categoriaId">
+        {{#each categorias}}
+        <tr>
+            <option value={{id}}>{{nome}}</option>
+        </tr>
+        {{/each}}
+    </select>
+    <br> <br>
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+        
+</form>
