@@ -3,6 +3,7 @@ const db = require('../config/db_sequelize');
 const controllerUsuario = require('../controllers/controllerUsuario');
 const controllerPalavraChave = require('../controllers/controllerPalavraChave');
 const controllerConhecimento = require('../controllers/controllerConhecimento');
+const controllerProjeto = require('../controllers/controllerProjeto');
 const route = express.Router();
 
 db.sequelize.sync({force: false}).then(() => {
@@ -37,20 +38,20 @@ route.post("/usuarioUpdate", controllerUsuario.postUpdate);
 route.get("/usuarioDelete/:id", controllerUsuario.getDelete);
 
 //Controller PalavraChave
-route.get("/palavraChaveCreate", controllerConhecimento.getCreate);
-route.post("/palavraChaveCreate", controllerConhecimento.postCreate);
-route.get("/palavraChaveList", controllerConhecimento.getList);
-route.get("/palavraChaveUpdate/:id", controllerConhecimento.getUpdate);
-route.post("/palavraChaveUpdate", controllerConhecimento.postUpdate);
-route.get("/palavraChaveDelete/:id", controllerConhecimento.getDelete);
+route.get("/palavraChaveCreate", controllerPalavraChave.getCreate);
+route.post("/palavraChaveCreate", controllerPalavraChave.postCreate);
+route.get("/palavraChaveList", controllerPalavraChave.getList);
+route.get("/palavraChaveUpdate/:id", controllerPalavraChave.getUpdate);
+route.post("/palavraChaveUpdate", controllerPalavraChave.postUpdate);
+route.get("/palavraChaveDelete/:id", controllerPalavraChave.getDelete);
 
 //Controller Projeto
-// route.get("/projetoCreate", controllerProjeto.getCreate);
-// route.post("/projetoCreate", controllerProjeto.postCreate);
-// route.get("/projetoList", controllerProjeto.getList);
-// route.get("/projetoUpdate/:id", controllerProjeto.getUpdate);
-// route.post("/projetoUpdate", controllerProjeto.postUpdate);
-// route.get("/projetoDelete/:id", controllerProjeto.getDelete);
+route.get("/projetoCreate", controllerProjeto.getCreate);
+route.post("/projetoCreate", controllerProjeto.postCreate);
+route.get("/projetoList", controllerProjeto.getList);
+route.get("/projetoUpdate/:id", controllerProjeto.getUpdate);
+route.post("/projetoUpdate", controllerProjeto.postUpdate);
+route.get("/projetoDelete/:id", controllerProjeto.getDelete);
 
 //Controller Conhecimento
 route.get("/conhecimentoCreate", controllerConhecimento.getCreate);

@@ -1,7 +1,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">Nome</th>
+            <th scope="col">Conhecimento</th>
             {{#if admin}}
             <th scope="col">Editar</th>
             <th scope="col">Deletar</th>
@@ -9,12 +9,12 @@
         </tr>
     </thead>
     <tbody>
-        {{#each categorias}}
+        {{#each conhecimento}}
         <tr>
-            <th scope="row">{{nome}}</th>
-            {{#if ../admin}}
-            <td><a href="categoriaUpdate/{{id}}">Editar</a></td>
-            <td><a href="categoriaDelete/{{id}}">Deletar</a></td>
+            <th scope="row">{{conhecimento}}</th>
+            {{#if admin}}
+            <td><a href="conhecimentoUpdate/{{id}}">Editar</a></td>
+            <td><a href="conhecimentoDelete/{{id}}">Deletar</a></td>
             {{/if}}
         </tr>
         {{/each}}

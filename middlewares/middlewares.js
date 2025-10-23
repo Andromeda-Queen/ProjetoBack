@@ -12,6 +12,7 @@ module.exports = {
             }
             next();
         }
+        
         else if ((req.url == '/') && (req.method == 'GET')) next();
         else if ((req.url == '/login') && (req.method == 'POST')) next();
         // Usuário externo pode: visualizar projetos, filtrar por palavras chaves, e acessar relatório
