@@ -1,34 +1,36 @@
 <table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Login</th>
-            <th scope="col">Senha</th>
-            <th scope="col">Tipo</th>
-            {{#if admin}}
-            <th scope="col">Editar</th>
-            <th scope="col">Deletar</th>
-            {{/if}}
-        </tr>
-    </thead>
-    <tbody>
-        {{#each usuarios}}
-        <tr>
-            <th scope="row">{{login}}</th>
-            <td>{{senha}}</td>
-            <td>{{tipo}}</td>
-            <td>
-                {{#each ../conhecimentosUsuario}}
-                    {{#ifDoisArgumentos usuarioId ../id}}
-                        <div>
-                            Conhecimento ID: {{conhecimentoId}} - Escala: {{escala}}
-                        </div>
-                    {{/ifDoisArgumentos}}
-                {{/each}}
-            {{#if ../admin}}
-            <td><a href="usuarioUpdate/{{id}}">Editar</a></td>
-            <td><a href="usuarioDelete/{{id}}">Deletar</a></td>
-            {{/if}}
-        </tr>
-        {{/each}}
-    </tbody>
+  <thead>
+    <tr>
+      <th>Login</th>
+      <th>Senha</th>
+      <th>Tipo</th>
+      <th>Conhecimentos</th>
+      {{#if admin}}
+        <th>Editar</th>
+        <th>Deletar</th>
+      {{/if}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#each usuarios}}
+      <tr>
+        <th scope="row">{{login}}</th>
+        <td>{{senha}}</td>
+        <td>{{tipo}}</td>
+        <td>
+          {{#each ../conhecimentosUsuario}}
+            {{#ifDoisArgumentos usuarioId ../id}}
+              <div>
+                Conhecimento ID: {{conhecimentoId}} - Escala: {{escala}}
+              </div>
+            {{/ifDoisArgumentos}}
+          {{/each}}
+        </td>
+        {{#if ../admin}}
+          <td><a href="usuarioUpdate/{{id}}">Editar</a></td>
+          <td><a href="usuarioDelete/{{id}}">Deletar</a></td>
+        {{/if}}
+      </tr>
+    {{/each}}
+  </tbody>
 </table>
