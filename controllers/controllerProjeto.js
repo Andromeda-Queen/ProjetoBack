@@ -16,9 +16,11 @@ module.exports = {
     // mostra o formulário com as palavras-chave disponíveis
     async getCreate(req, res) {
         try {
+            const usuarios = await db.Usuario.findAll();
             const palavrasChave = await db.PalavraChave.findAll();
             return res.render('projeto/projetoCreate', {
                 // nome enviado ajustado para o que o Handlebars usa
+                usuarios: usuarios.map(u => u.toJSON()),
                 palavraChave: palavrasChave.map(pc => pc.toJSON())
             });
         } catch (err) {
@@ -35,7 +37,7 @@ module.exports = {
 
             // checkboxes do template usam name="palavrasChave[]", assim req.body.palavrasChave será array ou string
             const raw = req.body.palavrasChave || req.body['palavrasChave[]'] || req.body.palavrasChaveId;
-            const ids = Array.isArray(raw) ? raw.map(x => parseInt(x, 10)).filter(n => !isNaN(n)) : (raw ? [parseInt(raw,10)].filter(n => !isNaN(n)) : []);
+            const ids = Array.isArray(raw) ? raw.map(x => parseInt(x, 10)).filter(n => !isNaN(n)) : (raw ? [parseInt(raw, 10)].filter(n => !isNaN(n)) : []);
 
             if (ids.length > 0) {
                 // tenta os métodos gerados dinamicamente (vários nomes para segurança)
@@ -59,21 +61,38 @@ module.exports = {
     // lista projetos e inclui as palavras-chave associadas (se associação existir)
     async getList(req, res) {
         try {
-            // inclui usando o alias 'palavrasChave' definido acima
+            // busca projetos e membros
             const projetos = await db.Projeto.findAll({
                 limit: 50,
                 offset: 0,
                 include: [{ model: db.PalavraChave, as: 'palavrasChave' }]
             });
 
-            const projetosJSON = projetos.map(p => p.toJSON());
-            return res.render('projeto/projetoList', { projetos: projetosJSON });
+            const membros = await db.ProjetoUsuario.findAll();
+
+            // transformar membros em array de objetos plain
+            const membrosPlain = membros.map(m => m.toJSON());
+
+            // para cada projeto, anexa a lista de membros (apenas os usuarioId,
+            // ou o objeto inteiro se precisar)
+            const projetosComMembros = projetos.map(p => {
+                const pj = p.toJSON();
+                pj.membros = membrosPlain
+                    .filter(m => m.projetoId === pj.id)   // pega só membros do projeto
+                    .map(m => m.usuarioId);               // mapeia para usuárioId (ou m se quiser objeto)
+                return pj;
+            });
+
+            return res.render('projeto/projetoList', {
+                projetos: projetosComMembros,
+                membros: membrosPlain // opcional, se ainda quiser
+            });
         } catch (err) {
             console.error(err);
             return res.status(500).send('Erro ao listar projetos');
         }
     },
-
+    
     // carrega projeto para edição e marca palavras-chave selecionadas
     async getUpdate(req, res) {
         try {
@@ -127,7 +146,7 @@ module.exports = {
 
             // normaliza ids vindos do form (checkboxes name="palavrasChave[]")
             const raw = req.body.palavrasChave || req.body['palavrasChave[]'] || req.body.palavrasChaveId;
-            const ids = Array.isArray(raw) ? raw.map(x => parseInt(x, 10)).filter(n => !isNaN(n)) : (raw ? [parseInt(raw,10)].filter(n => !isNaN(n)) : []);
+            const ids = Array.isArray(raw) ? raw.map(x => parseInt(x, 10)).filter(n => !isNaN(n)) : (raw ? [parseInt(raw, 10)].filter(n => !isNaN(n)) : []);
 
             // associa/desassocia usando métodos do Sequelize, ou fallback para tabela de junção
             if (typeof projeto.setPalavrasChaves === 'function') {

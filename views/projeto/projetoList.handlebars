@@ -1,3 +1,4 @@
+<h2>Projetos</h2>
 <table class="table">
     <thead>
         <tr>
@@ -5,6 +6,7 @@
             <th scope="col">Link Externo</th>
             <th scope="col">Resumo</th>
             <th scope="col">Palavras-Chave</th>
+            <th scope="col">Alunos Membros</th>
             <th scope="col">Editar</th>
             <th scope="col">Deletar</th>
         </tr>
@@ -24,6 +26,16 @@
                     <em>Sem palavras-chave</em>
                 {{/if}}
             </td>
+            <td>
+            {{#if membros}}
+                {{#each membros}}
+                <div>{{this}}</div>
+                {{/each}}
+            {{else}}
+                <em>Sem membros</em>
+            {{/if}}
+            </td>
+            {{!-- <td>Membro 1</td> --}}
             <td><a href="projetoUpdate/{{id}}">Editar</a></td>
             <td><a href="projetoDelete/{{id}}">Deletar</a></td>
         </tr>

@@ -83,54 +83,58 @@ module.exports = {
         }
     },
     async getList(req, res) {
-        try {
-            const usuarios = await db.Usuario.findAll({
-                limit: 10,
-                offset: 0
-            });
-
-            const conhecimentosUsuario = await db.ConhecimentoUsuario.findAll({
-                include: [
-                    { model: db.Conhecimento, as: 'conhecimento' },
-                    { model: db.Usuario, as: 'usuario' }
-                ]
-            });
-
-            const usuariosMap = new Map();
-            usuarios.forEach(u => {
-                usuariosMap.set(u.id, Object.assign(u.toJSON(), { conhecimentos: [] }));
-            });
-
-            conhecimentosUsuario.forEach(kv => {
-                const ku = kv.toJSON();
-                const uid = ku.usuarioId || (ku.usuario && ku.usuario.id);
-                // determina nome do conhecimento (vindo do include ou de um campo direto)
-                const nomeDoConhecimento = (ku.conhecimento && ku.conhecimento.conhecimento) || ku.nome || null;
-                const conhecimentoObj = {
-                    id: ku.conhecimentoId || (ku.conhecimento && ku.conhecimento.id) || null,
-                    conhecimentoNome: nomeDoConhecimento,
-                    escala: ku.escala || 0
-                };
-
-                if (usuariosMap.has(uid)) {
-                    usuariosMap.get(uid).conhecimentos.push(conhecimentoObj);
-                } else if (ku.usuario) {
-                    const userObj = Object.assign(
-                        (ku.usuario.toJSON ? ku.usuario.toJSON() : ku.usuario),
-                        { conhecimentos: [conhecimentoObj] }
-                    );
-                    usuariosMap.set(userObj.id, userObj);
-                }
-            });
-
-            const usuariosComConhecimentos = Array.from(usuariosMap.values());
-
-            res.render('usuario/usuarioList', {
-                usuarios: usuariosComConhecimentos
-            });
-        } catch (err) {
-            console.log(err);
-            res.status(500).send('Erro ao buscar usuários');
+        if(res.locals.admin){
+            try {
+                const usuarios = await db.Usuario.findAll({
+                    limit: 10,
+                    offset: 0
+                });
+    
+                const conhecimentosUsuario = await db.ConhecimentoUsuario.findAll({
+                    include: [
+                        { model: db.Conhecimento, as: 'conhecimento' },
+                        { model: db.Usuario, as: 'usuario' }
+                    ]
+                });
+    
+                const usuariosMap = new Map();
+                usuarios.forEach(u => {
+                    usuariosMap.set(u.id, Object.assign(u.toJSON(), { conhecimentos: [] }));
+                });
+    
+                conhecimentosUsuario.forEach(kv => {
+                    const ku = kv.toJSON();
+                    const uid = ku.usuarioId || (ku.usuario && ku.usuario.id);
+                    // determina nome do conhecimento (vindo do include ou de um campo direto)
+                    const nomeDoConhecimento = (ku.conhecimento && ku.conhecimento.conhecimento) || ku.nome || null;
+                    const conhecimentoObj = {
+                        id: ku.conhecimentoId || (ku.conhecimento && ku.conhecimento.id) || null,
+                        conhecimentoNome: nomeDoConhecimento,
+                        escala: ku.escala || 0
+                    };
+    
+                    if (usuariosMap.has(uid)) {
+                        usuariosMap.get(uid).conhecimentos.push(conhecimentoObj);
+                    } else if (ku.usuario) {
+                        const userObj = Object.assign(
+                            (ku.usuario.toJSON ? ku.usuario.toJSON() : ku.usuario),
+                            { conhecimentos: [conhecimentoObj] }
+                        );
+                        usuariosMap.set(userObj.id, userObj);
+                    }
+                });
+    
+                const usuariosComConhecimentos = Array.from(usuariosMap.values());
+    
+                res.render('usuario/usuarioList', {
+                    usuarios: usuariosComConhecimentos
+                });
+            } catch (err) {
+                console.log(err);
+                res.status(500).send('Erro ao buscar usuários');
+            }
+        }else{
+            res.redirect('/home');
         }
     },
     // carrega usuário para edição e marca conhecimentos selecionados com escala

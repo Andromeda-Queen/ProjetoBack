@@ -97,5 +97,8 @@ if (hasModel('Usuario') && hasModel('Conhecimento')) {
   console.warn('Aviso: Usuario <-> Conhecimento não associados — verifique models Usuario e Conhecimento');
 }
 
+db.Usuario.belongsToMany(db.Projeto, { through: db.ProjetoUsuario});
+db.Projeto.belongsToMany(db.Usuario, { through: db.ProjetoUsuario});
+
 module.exports = db;
 

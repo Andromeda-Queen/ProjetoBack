@@ -32,7 +32,11 @@
         </div>
       {{/each}}
     </div>
-
     <br>
     <button type="submit" class="btn btn-primary">Salvar</button>
 </form>
+{{#if projeto}}
+  <form action="/projetoUsuarioCreate/{{projeto.id}}" method="get">
+      <button type="submit" class="btn btn-link mt-2">Adicionar Membros</button>
+  </form>
+{{/if}}

@@ -1,0 +1,32 @@
+<h2>Gerenciar Membros do Projeto</h2>
+
+<div class="list-group">
+  {{#each usuarios}}
+    <form 
+      action="{{#if (includes ../membrosIds id)}}/projetoUsuarioDelete{{else}}/projetoUsuarioCreate{{/if}}" 
+      method="post" 
+      class="list-group-item d-flex justify-content-between align-items-center p-3 mb-2 border rounded shadow-sm"
+    >
+      <div>
+        <strong>{{login}}</strong>
+        {{!-- se quiser mostrar mais info: <small class="text-muted"> ({{email}})</small> --}}
+      </div>
+
+      <div class="d-flex align-items-center">
+        <input type="hidden" name="usuarioId" value="{{id}}">
+        <input type="hidden" name="projetoId" value="{{../projetoId}}">
+
+        {{#if (includes ../membrosIds id)}}
+          <button type="submit" class="btn btn-sm btn-outline-danger me-2">
+            Remover
+          </button>
+        {{else}}
+          <button type="submit" class="btn btn-sm btn-primary me-2">
+            Adicionar
+          </button>
+        {{/if}}
+
+      </div>
+    </form>
+  {{/each}}
+</div>
