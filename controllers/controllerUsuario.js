@@ -35,7 +35,7 @@ module.exports = {
     },
     async postCreate(req, res) {
         db.Usuario.create(req.body).then(() => {
-            res.redirect('/home');
+            res.redirect('/usuarioList');
         }).catch((err) => {
             console.log(err);
         });
@@ -64,14 +64,14 @@ module.exports = {
     },
     async postUpdate(req, res) {
         await db.Usuario.update(req.body, { where: { id: req.body.id } }).then(
-            res.render('home')
+            res.redirect('/usuarioList')
         ).catch(function (err) {
             console.log(err);
         });
     },
     async getDelete(req, res) {
         await db.Usuario.destroy({ where: { id: req.params.id } }).then(
-            res.render('home')
+            res.redirect('/usuarioList')
         ).catch(err => {
             console.log(err);
         });
