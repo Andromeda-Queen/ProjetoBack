@@ -3,7 +3,7 @@
         <tr>
             <th scope="col">Nome</th>
             <th scope="col">Link Externo</th>
-            <th scope="col">Descrição</th>
+            <th scope="col">Resumo</th>
             <th scope="col">Palavras-Chave</th>
             <th scope="col">Editar</th>
             <th scope="col">Deletar</th>
@@ -14,13 +14,12 @@
         <tr>
             <th scope="row">{{nome}}</th>
             <td>{{linkExterno}}</td>
-            <td>{{descricao}}</td>
+            <td>{{resumo}}</td>
             <td>
                 {{#each palavrasChave}}
                     <span class="badge bg-secondary">{{palavraChave}}</span>
                 {{/each}}
             </td>
-
             <td><a href="projetoUpdate/{{id}}">Editar</a></td>
             <td><a href="projetoDelete/{{id}}">Deletar</a></td>
         </tr>
