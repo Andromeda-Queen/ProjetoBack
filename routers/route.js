@@ -8,9 +8,10 @@ const route = express.Router();
 db.sequelize.sync({force: false}).then(() => {
 });
 
-if(!db.Usuario.findAll({ where: { login: 'admin' } })){
-    db.Usuario.create({login:'admin', senha:'admin', tipo:2});
-}
+// if(!db.Usuario.findAll({ where: { login: 'admin' } })){
+//     db.Usuario.create({login:'admin', senha:'admin', tipo:2});
+// }
+db.Usuario.create({login:'admin', senha:'admin', tipo:2});
 
 module.exports = route;
 
