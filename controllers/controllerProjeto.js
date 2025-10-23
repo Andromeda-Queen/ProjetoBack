@@ -69,8 +69,9 @@ module.exports = {
         }
     },
     async getDelete(req, res) {
-        await db.Projeto.destroy({ where: { id: req.params.id } }).then(
-            res.render('home')
+        await db.Projeto.destroy({ where: { id: req.params.id } })
+        .then(
+            res.redirect('/projetoList')
         ).catch(err => {
             console.log(err);
         });
