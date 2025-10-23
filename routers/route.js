@@ -36,12 +36,12 @@ route.post("/usuarioUpdate", controllerUsuario.postUpdate);
 route.get("/usuarioDelete/:id", controllerUsuario.getDelete);
 
 //Controller PalavraChave
-route.get("/palavraChaveCreate", controllerConhecimento.getCreate);
-route.post("/palavraChaveCreate", controllerConhecimento.postCreate);
-route.get("/palavraChaveList", controllerConhecimento.getList);
-route.get("/palavraChaveUpdate/:id", controllerConhecimento.getUpdate);
-route.post("/palavraChaveUpdate", controllerConhecimento.postUpdate);
-route.get("/palavraChaveDelete/:id", controllerConhecimento.getDelete);
+route.get("/palavraChaveCreate", controllerPalavraChave.getCreate);
+route.post("/palavraChaveCreate", controllerPalavraChave.postCreate);
+route.get("/palavraChaveList", controllerPalavraChave.getList);
+route.get("/palavraChaveUpdate/:id", controllerPalavraChave.getUpdate);
+route.post("/palavraChaveUpdate", controllerPalavraChave.postUpdate);
+route.get("/palavraChaveDelete/:id", controllerPalavraChave.getDelete);
 
 //Controller Projeto
 // route.get("/projetoCreate", controllerProjeto.getCreate);
