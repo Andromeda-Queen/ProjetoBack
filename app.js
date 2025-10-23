@@ -12,7 +12,18 @@ app.use(session({secret:'textosecreto$asdfasdfaswwww',
 //app.use(cookieParser());
 
 
-app.engine('handlebars', handlebars.engine({defaultLayout:'main'}));
+// app.engine('handlebars', handlebars.engine({defaultLayout:'main'}));
+app.engine('handlebars', handlebars.engine({
+    defaultLayout: 'main',
+    helpers: {
+        ifDoisArgumentos: function(v1, v2, options) {
+            if (v1 == v2) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        }
+    }
+}));
 app.set('view engine','handlebars');
 
 app.use(express.json());

@@ -16,6 +16,14 @@
             <th scope="row">{{login}}</th>
             <td>{{senha}}</td>
             <td>{{tipo}}</td>
+            <td>
+                {{#each ../conhecimentosUsuario}}
+                    {{#ifDoisArgumentos usuarioId ../id}}
+                        <div>
+                            Conhecimento ID: {{conhecimentoId}} - Escala: {{escala}}
+                        </div>
+                    {{/ifDoisArgumentos}}
+                {{/each}}
             {{#if ../admin}}
             <td><a href="usuarioUpdate/{{id}}">Editar</a></td>
             <td><a href="usuarioDelete/{{id}}">Deletar</a></td>
