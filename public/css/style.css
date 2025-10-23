@@ -96,8 +96,8 @@ label {
 }
 
 .dropdown-item:hover {
-    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-    color: white;
+    background: linear-gradient(45deg, #e6e6e6, #cfcfcf);
+    color: rgb(0, 0, 0);
     transform: translateX(5px);
 }
 
