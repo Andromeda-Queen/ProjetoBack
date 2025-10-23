@@ -5,6 +5,7 @@ module.exports = {
     },
     sessionControl(req, res, next) {
         if (req.session.login != undefined) {
+            res.locals.userId = req.session.userId;
             res.locals.login = req.session.login;
             if (req.session.tipo == 2) {
                 res.locals.admin = true
