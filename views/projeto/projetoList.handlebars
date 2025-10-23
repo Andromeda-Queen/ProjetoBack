@@ -29,7 +29,7 @@
             <td>
             {{#if membros}}
                 {{#each membros}}
-                <div>{{this}}</div>
+                    <div>{{usuarioLogin}} {{#if usuarioId}}(<small>{{usuarioId}}</small>){{/if}}</div>
                 {{/each}}
             {{else}}
                 <em>Sem membros</em>

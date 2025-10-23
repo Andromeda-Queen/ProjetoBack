@@ -68,24 +68,30 @@ module.exports = {
                 include: [{ model: db.PalavraChave, as: 'palavrasChave' }]
             });
 
-            const membros = await db.ProjetoUsuario.findAll();
+            // busca associação projeto-usuario e usuários para mostrar nomes
+            const projetoUsuarios = await db.ProjetoUsuario.findAll();
+            const usuarios = await db.Usuario.findAll();
 
-            // transformar membros em array de objetos plain
-            const membrosPlain = membros.map(m => m.toJSON());
+            const usuarioMap = {};
+            usuarios.forEach(u => {
+                const obj = u.toJSON();
+                usuarioMap[obj.id] = obj.login || obj.id;
+            });
 
-            // para cada projeto, anexa a lista de membros (apenas os usuarioId,
-            // ou o objeto inteiro se precisar)
+            const projetoUsuariosPlain = projetoUsuarios.map(pu => pu.toJSON());
+
+            // para cada projeto, anexa a lista de membros com nome e id
             const projetosComMembros = projetos.map(p => {
                 const pj = p.toJSON();
-                pj.membros = membrosPlain
-                    .filter(m => m.projetoId === pj.id)   // pega só membros do projeto
-                    .map(m => m.usuarioId);               // mapeia para usuárioId (ou m se quiser objeto)
+                const membrosDoProjeto = projetoUsuariosPlain
+                    .filter(m => m.projetoId === pj.id)
+                    .map(m => ({ usuarioId: m.usuarioId, usuarioLogin: usuarioMap[m.usuarioId] || null }));
+                pj.membros = membrosDoProjeto;
                 return pj;
             });
 
             return res.render('projeto/projetoList', {
-                projetos: projetosComMembros,
-                membros: membrosPlain // opcional, se ainda quiser
+                projetos: projetosComMembros
             });
         } catch (err) {
             console.error(err);
