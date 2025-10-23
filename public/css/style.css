@@ -110,14 +110,27 @@ label {
     box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
 
-/* Logout link special styling */
-.nav-item:last-child .nav-link {
+/* Login button styling (blue) */
+.nav-item a[href="/login"] {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white !important;
+    font-weight: 600;
+}
+
+.nav-item a[href="/login"]:hover {
+    background: linear-gradient(45deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+/* Logout button styling (red) */
+.nav-item a[href="/logout"] {
     background: linear-gradient(45deg, #dc3545, #c82333);
     color: white !important;
     font-weight: 600;
 }
 
-.nav-item:last-child .nav-link:hover {
+.nav-item a[href="/logout"]:hover {
     background: linear-gradient(45deg, #c82333, #a71e2a);
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);

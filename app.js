@@ -21,7 +21,7 @@ app.engine('handlebars', handlebars.engine({
                 return options.fn(this);
             }
             return options.inverse(this);
-        }
+        },
     }
 }));
 app.set('view engine','handlebars');

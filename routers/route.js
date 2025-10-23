@@ -4,6 +4,7 @@ const controllerUsuario = require('../controllers/controllerUsuario');
 const controllerPalavraChave = require('../controllers/controllerPalavraChave');
 const controllerConhecimento = require('../controllers/controllerConhecimento');
 const controllerProjeto = require('../controllers/controllerProjeto');
+const controllerConhecimentoUsuario = require('../controllers/controllerConhecimentoUsuario');
 const route = express.Router();
 
 db.sequelize.sync({force: false}).then(() => {
@@ -21,9 +22,10 @@ route.get("/home", function (req, res) {
 
     if (req.session.login) {
         res.render('home')
-    }
-    else
+    } else {
         res.redirect('/');
+    }
+
 });
 
 //Controller Usuario
@@ -60,3 +62,6 @@ route.get("/conhecimentoList", controllerConhecimento.getList);
 route.get("/conhecimentoUpdate/:id", controllerConhecimento.getUpdate);
 route.post("/conhecimentoUpdate", controllerConhecimento.postUpdate);
 route.get("/conhecimentoDelete/:id", controllerConhecimento.getDelete);
+
+// relatorio
+route.get("/relatorio", controllerConhecimentoUsuario.getRelatorio);

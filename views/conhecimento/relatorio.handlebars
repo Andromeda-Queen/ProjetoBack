@@ -1,0 +1,24 @@
+<h2>Relatório de Domínio de Conhecimentos</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Conhecimento</th>
+                <th>Total de Alunos</th>
+                <th>Alunos que Dominam</th>
+                <th>Proporção (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each relatorio}}
+            <tr>
+                <td>{{this.conhecimento}}</td>
+                <td>{{this.totalUsuarios}}</td>
+                <td>{{this.usuariosDominando}}</td>
+                <td>{{this.proporcao}}%</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
