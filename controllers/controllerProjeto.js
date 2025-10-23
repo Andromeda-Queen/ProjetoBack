@@ -30,12 +30,25 @@ module.exports = {
             });
     },
     async getList(req, res) {
-        db.Projeto.findAll().then(projetos => {
-            res.render('projeto/projetoList',
-                { projetos: projetos.map(projeto => projeto.toJSON()) });
-        }).catch((err) => {
-            console.log(err);
-        });
+        try {
+                    const projetos = await db.Usuario.findAll({
+                        limit: 10,                         // limita a 10 resultados
+                        offset: 0                          // começa do primeiro
+                    });
+        
+                    res.render('projeto/projetoList', {
+                        projetos: projetos.map(user => user.toJSON())
+                    });
+                } catch (err) {
+                    console.log(err);
+                    res.status(500).send('Erro ao buscar projetos');
+                }
+        // db.Projeto.findAll().then(projetos => {
+        //     res.render('projeto/projetoList',
+        //         { projetos: projetos.map(projeto => projeto.toJSON()) });
+        // }).catch((err) => {
+        //     console.log(err);
+        // });
     },
     async getUpdate(req, res) {
         await db.Projeto.findByPk(req.params.id).then(
