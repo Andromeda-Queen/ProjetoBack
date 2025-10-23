@@ -3,6 +3,7 @@ const db = require('../config/db_sequelize');
 const controllerUsuario = require('../controllers/controllerUsuario');
 const controllerPalavraChave = require('../controllers/controllerPalavraChave');
 const controllerConhecimento = require('../controllers/controllerConhecimento');
+const controllerProjeto = require('../controllers/controllerProjeto');
 const route = express.Router();
 
 db.sequelize.sync({force: false}).then(() => {
@@ -44,12 +45,12 @@ route.post("/palavraChaveUpdate", controllerPalavraChave.postUpdate);
 route.get("/palavraChaveDelete/:id", controllerPalavraChave.getDelete);
 
 //Controller Projeto
-// route.get("/projetoCreate", controllerProjeto.getCreate);
-// route.post("/projetoCreate", controllerProjeto.postCreate);
-// route.get("/projetoList", controllerProjeto.getList);
-// route.get("/projetoUpdate/:id", controllerProjeto.getUpdate);
-// route.post("/projetoUpdate", controllerProjeto.postUpdate);
-// route.get("/projetoDelete/:id", controllerProjeto.getDelete);
+route.get("/projetoCreate", controllerProjeto.getCreate);
+route.post("/projetoCreate", controllerProjeto.postCreate);
+route.get("/projetoList", controllerProjeto.getList);
+route.get("/projetoUpdate/:id", controllerProjeto.getUpdate);
+route.post("/projetoUpdate", controllerProjeto.postUpdate);
+route.get("/projetoDelete/:id", controllerProjeto.getDelete);
 
 //Controller Conhecimento
 route.get("/conhecimentoCreate", controllerConhecimento.getCreate);
