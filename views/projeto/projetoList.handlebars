@@ -16,9 +16,13 @@
             <td>{{linkExterno}}</td>
             <td>{{resumo}}</td>
             <td>
-                {{#each palavrasChave}}
-                    <span class="badge bg-secondary">{{palavraChave}}</span>
-                {{/each}}
+                {{#if palavrasChave}}
+                    {{#each palavrasChave}}
+                        <span class="badge bg-secondary me-1">{{palavraChave}}</span>
+                    {{/each}}
+                {{else}}
+                    <em>Sem palavras-chave</em>
+                {{/if}}
             </td>
             <td><a href="projetoUpdate/{{id}}">Editar</a></td>
             <td><a href="projetoDelete/{{id}}">Deletar</a></td>

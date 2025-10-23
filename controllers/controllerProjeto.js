@@ -1,79 +1,163 @@
 const db = require('../config/db_sequelize');
 const path = require('path');
-const { getCreate } = require('./controllerProjeto');
+
+function normalizeIds(input) {
+    if (!input && input !== 0) return [];
+    if (Array.isArray(input)) return input.map(x => parseInt(x, 10)).filter(n => !isNaN(n));
+    return [parseInt(input, 10)].filter(n => !isNaN(n));
+}
+
+function findAssociation(model, target) {
+    if (!model || !model.associations) return null;
+    return Object.values(model.associations).find(a => a.target === target) || null;
+}
 
 module.exports = {
+    // mostra o formulário com as palavras-chave disponíveis
     async getCreate(req, res) {
         try {
-            return res.render('projeto/projetoCreate');
+            const palavrasChave = await db.PalavraChave.findAll();
+            return res.render('projeto/projetoCreate', {
+                // nome enviado ajustado para o que o Handlebars usa
+                palavraChave: palavrasChave.map(pc => pc.toJSON())
+            });
         } catch (err) {
             console.error(err);
+            return res.status(500).send('Erro ao carregar formulário de criação de projeto');
         }
     },
+
+    // cria projeto e associa palavras-chave (se houver associação)
     async postCreate(req, res) {
-        const {nome, linkExterno, resumo} = req.body;
-        db.Projeto.create({nome, linkExterno, resumo})
-            .then(() => {
-                res.redirect('/projetoList')
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        const { nome, linkExterno, resumo } = req.body;
+        try {
+            const projeto = await db.Projeto.create({ nome, linkExterno, resumo });
+
+            // checkboxes do template usam name="palavrasChave[]", assim req.body.palavrasChave será array ou string
+            const raw = req.body.palavrasChave || req.body['palavrasChave[]'] || req.body.palavrasChaveId;
+            const ids = Array.isArray(raw) ? raw.map(x => parseInt(x, 10)).filter(n => !isNaN(n)) : (raw ? [parseInt(raw,10)].filter(n => !isNaN(n)) : []);
+
+            if (ids.length > 0) {
+                // tenta os métodos gerados dinamicamente (vários nomes para segurança)
+                if (typeof projeto.setPalavrasChaves === 'function') await projeto.setPalavrasChaves(ids);
+                else if (typeof projeto.setPalavraChaves === 'function') await projeto.setPalavraChaves(ids);
+                else if (typeof projeto.setPalavrasChave === 'function') await projeto.setPalavrasChave(ids);
+                else if (db.ProjetoPalavraChave) {
+                    // fallback para tabela de junção manual
+                    const joins = ids.map(pid => ({ projetoId: projeto.id, palavraChaveId: pid }));
+                    await db.ProjetoPalavraChave.bulkCreate(joins);
+                }
+            }
+
+            return res.redirect('/projetoList');
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send('Erro ao criar projeto');
+        }
     },
+
+    // lista projetos e inclui as palavras-chave associadas (se associação existir)
     async getList(req, res) {
         try {
-            const projeto = await db.Projeto.findAll({
-                limit: 10,                         // limita a 10 resultados
-                offset: 0                          // começa do primeiro
+            // inclui usando o alias 'palavrasChave' definido acima
+            const projetos = await db.Projeto.findAll({
+                limit: 50,
+                offset: 0,
+                include: [{ model: db.PalavraChave, as: 'palavrasChave' }]
             });
-            res.render('projeto/projetoList', {
-                projetos: projeto.map(user => user.toJSON())
+
+            const projetosJSON = projetos.map(p => p.toJSON());
+            return res.render('projeto/projetoList', { projetos: projetosJSON });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send('Erro ao listar projetos');
+        }
+    },
+
+    // carrega projeto para edição e marca palavras-chave selecionadas
+    async getUpdate(req, res) {
+        try {
+            const projeto = await db.Projeto.findByPk(req.params.id);
+            if (!projeto) return res.status(404).send('Projeto não encontrado');
+
+            const palavrasChave = await db.PalavraChave.findAll();
+
+            // obtém ids associados (tenta pelo método do sequelize ou pela tabela de junção)
+            let selectedIds = [];
+            if (typeof projeto.getPalavrasChaves === 'function') {
+                const associados = await projeto.getPalavrasChaves();
+                selectedIds = associados.map(a => (a.toJSON ? a.toJSON().id : a.id));
+            } else if (db.ProjetoPalavraChave) {
+                const joins = await db.ProjetoPalavraChave.findAll({ where: { projetoId: projeto.id } });
+                selectedIds = joins.map(j => j.palavraChaveId);
+            }
+
+            // marca cada palavraChave com selected: true/false
+            const palavrasComSelected = palavrasChave.map(pc => {
+                const obj = pc.toJSON();
+                obj.selected = selectedIds.includes(obj.id);
+                return obj;
+            });
+
+            return res.render('projeto/projetoCreate', {
+                projeto: projeto.toJSON(),
+                palavraChave: palavrasComSelected,
+                selectedPalavras: selectedIds
             });
         } catch (err) {
-            console.log(err);
-            res.status(500).send('Erro ao buscar projetos');
+            console.error(err);
+            return res.status(500).send('Erro ao carregar edição do projeto');
         }
-        // db.Projeto.findAll().then(projetos => {
-        //     res.render('projeto/projetoList',
-        //         { projetos: projeto.map(projeto => projeto.toJSON()) });
-        // }).catch((err) => {
-        //     console.log(err);
-        // });
     },
-    async getUpdate(req, res) {
-        await db.Projeto.findByPk(req.params.id).then(
-            projeto => res.render('projeto/projetoUpdate',
-                {
-                    projeto: projeto.dataValues,
-                    palavraChave: palavraChave.map(palavraChave => palavraChave.toJSON())
-                })
-        ).catch(function (err) {
-            console.log(err);
-        });
-    },
+
+    // atualiza projeto e associa/desassocia palavras-chave
     async postUpdate(req, res) {
-        const {nome, linkExterno, resumo, palavraChaveId} = req.body;
         try {
-            await db.Receita.update({
-                nome,
-                linkExterno,
-                resumo,
-                palavraChaveId,
-            }, {
-                where: { id: req.body.id }
-            });
-            res.redirect('projeto/projetoList');
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Erro interno do servidor');
+            const { id, nome, linkExterno, resumo } = req.body;
+            if (!id) return res.status(400).send('ID do projeto é obrigatório');
+
+            // atualiza campos do projeto
+            await db.Projeto.update(
+                { nome, linkExterno, resumo },
+                { where: { id } }
+            );
+
+            const projeto = await db.Projeto.findByPk(id);
+            if (!projeto) return res.status(404).send('Projeto não encontrado');
+
+            // normaliza ids vindos do form (checkboxes name="palavrasChave[]")
+            const raw = req.body.palavrasChave || req.body['palavrasChave[]'] || req.body.palavrasChaveId;
+            const ids = Array.isArray(raw) ? raw.map(x => parseInt(x, 10)).filter(n => !isNaN(n)) : (raw ? [parseInt(raw,10)].filter(n => !isNaN(n)) : []);
+
+            // associa/desassocia usando métodos do Sequelize, ou fallback para tabela de junção
+            if (typeof projeto.setPalavrasChaves === 'function') {
+                await projeto.setPalavrasChaves(ids);
+            } else if (typeof projeto.setPalavraChaves === 'function') {
+                await projeto.setPalavraChaves(ids);
+            } else if (typeof projeto.setPalavrasChave === 'function') {
+                await projeto.setPalavrasChave(ids);
+            } else if (db.ProjetoPalavraChave) {
+                await db.ProjetoPalavraChave.destroy({ where: { projetoId: projeto.id } });
+                if (ids.length) {
+                    const joins = ids.map(pid => ({ projetoId: projeto.id, palavraChaveId: pid }));
+                    await db.ProjetoPalavraChave.bulkCreate(joins);
+                }
+            }
+
+            return res.redirect('/projetoList');
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send('Erro ao atualizar projeto');
         }
     },
+
     async getDelete(req, res) {
-        await db.Projeto.destroy({ where: { id: req.params.id } })
-        .then(
-            res.redirect('/projetoList')
-        ).catch(err => {
-            console.log(err);
-        });
+        try {
+            await db.Projeto.destroy({ where: { id: req.params.id } });
+            return res.redirect('/projetoList');
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send('Erro ao deletar projeto');
+        }
     }
-}
+};
