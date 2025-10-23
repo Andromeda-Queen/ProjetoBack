@@ -24,7 +24,9 @@ module.exports = {
                     req.session.tipo = usuarios[0].dataValues.tipo;
                     res.locals.admin = true;
                 }
-                res.render('home');
+                res.render('home',{
+                    userId: req.session.userId,
+                });
             } else
                 res.redirect('/');
         }).catch((err) => {
@@ -222,7 +224,7 @@ module.exports = {
                 await usuario.setConhecimentos(ids);
             }
 
-            return res.redirect('/usuarioList');
+            return res.redirect(`/usuarioUpdate/${req.session.userId}`);
         } catch (err) {
             console.error(err);
             return res.status(500).send('Erro ao atualizar usuário');

@@ -74,9 +74,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-                            {{#if login}}
-                                <a class="dropdown-item" href="/projetoCreate">Criar</a>
-                            {{/if}}
+                            <a class="dropdown-item" href="/projetoCreate">Criar</a>
                             <a class="dropdown-item" href="/projetoList">Listar</a>
                         </div>
                     </li>
@@ -84,13 +82,20 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/login">Login</a>
                     {{/unless }}
-
-                    {{#if login}}
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">Logout</a>
                     </li>
-                    {{/if}}
                 </ul>
+            </div>
+            <!-- Account icon aligned to the right -->
+            <div class="navbar-account ml-auto">
+                <a href="/usuarioUpdate/{{userId}}" class="account-icon" title="Perfil">
+                    <!-- simple person SVG icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
             </div>
         </nav>​
 

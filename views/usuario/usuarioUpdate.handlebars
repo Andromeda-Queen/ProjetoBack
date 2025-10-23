@@ -3,17 +3,29 @@
 
   <div class="mb-3">
     <label for="login" class="form-label">Login</label>
-    <input id="login" name="login" class="form-control" value="{{usuario.login}}">
+    {{#if admin}}
+      <input id="login" name="login" class="form-control" value="{{usuario.login}}">
+    {{else}}
+      <input id="login" name="login" class="form-control" value="{{usuario.login}}" readonly>
+    {{/if}}
   </div>
 
   <div class="mb-3">
     <label for="senha" class="form-label">Senha</label>
-    <input id="senha" name="senha" type="password" class="form-control" value="{{usuario.senha}}">
+    {{#if admin}}
+      <input id="senha" name="senha" type="password" class="form-control" value="{{usuario.senha}}">
+    {{else}}
+      <input id="senha" name="senha" type="password" class="form-control" value="{{usuario.senha}}" readonly>
+    {{/if }}
   </div>
 
   <div class="mb-3">
     <label for="tipo" class="form-label">Tipo</label>
-    <input id="tipo" name="tipo" class="form-control" value="{{usuario.tipo}}">
+    {{#if admin}}
+      <input id="tipo" name="tipo" class="form-control" value="{{usuario.tipo}}">
+    {{else}}
+      <input id="tipo" name="tipo" class="form-control" value="{{usuario.tipo}}" readonly>
+    {{/if }}
   </div>
 
   <hr>

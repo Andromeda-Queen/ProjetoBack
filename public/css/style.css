@@ -191,3 +191,42 @@ center {
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(45deg, #764ba2, #667eea);
 }
+
+/* Account icon (right side of navbar) */
+.navbar-account {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.account-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #ffffff;
+    background: linear-gradient(45deg, #6c757d, #343a40);
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.account-icon svg {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+.account-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    background: linear-gradient(45deg, #5a6268, #212529);
+}
+
+@media (max-width: 768px) {
+    .navbar-account {
+        display: none; /* hide on small screens to avoid clutter */
+    }
+}
