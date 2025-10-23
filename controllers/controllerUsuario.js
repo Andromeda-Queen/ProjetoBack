@@ -131,19 +131,102 @@ module.exports = {
             res.status(500).send('Erro ao buscar usuários');
         }
     },
+    // carrega usuário para edição e marca conhecimentos selecionados com escala
     async getUpdate(req, res) {
-        await db.Usuario.findByPk(req.params.id).then(
-            usuario => res.render('usuario/usuarioUpdate', { usuario: usuario.dataValues })
-        ).catch(function (err) {
-            console.log(err);
-        });
+        try {
+            const usuario = await db.Usuario.findByPk(req.params.id);
+            if (!usuario) return res.status(404).send('Usuário não encontrado');
+
+            // busca todos os conhecimentos disponíveis
+            const conhecimentos = await db.Conhecimento.findAll();
+
+            // busca relacionamentos existentes para este usuário (com include do Conhecimento)
+            const conhecimentosUsuario = await db.ConhecimentoUsuario.findAll({
+                where: { usuarioId: usuario.id },
+                include: [{ model: db.Conhecimento, as: 'conhecimento' }]
+            });
+
+            // cria mapa id -> escala para marcação
+            const escalaMap = {};
+            conhecimentosUsuario.forEach(kv => {
+                const ku = kv.toJSON ? kv.toJSON() : kv;
+                const cid = ku.conhecimentoId || (ku.conhecimento && ku.conhecimento.id);
+                escalaMap[cid] = ku.escala ?? 0;
+            });
+
+            // monta lista de conhecimentos com selected e escala (para checkbox + input de escala no template)
+            const conhecimentosComSelected = conhecimentos.map(c => {
+                const obj = c.toJSON();
+                obj.selected = Object.prototype.hasOwnProperty.call(escalaMap, obj.id);
+                obj.escala = escalaMap[obj.id] ?? 0;
+                return obj;
+            });
+
+            return res.render('usuario/usuarioUpdate', {
+                usuario: usuario.toJSON(),
+                conhecimentos: conhecimentosComSelected
+            });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send('Erro ao carregar edição do usuário');
+        }
     },
+
+    // atualiza usuário e seus conhecimentos (escala)
     async postUpdate(req, res) {
-        await db.Usuario.update(req.body, { where: { id: req.body.id } }).then(
-            res.redirect('/usuarioList')
-        ).catch(function (err) {
-            console.log(err);
-        });
+        try {
+            const { id, login, senha, tipo } = req.body;
+            if (!id) return res.status(400).send('ID do usuário é obrigatório');
+
+            // atualiza dados básicos do usuário
+            await db.Usuario.update({ login, senha, tipo }, { where: { id } });
+            const usuario = await db.Usuario.findByPk(id);
+            if (!usuario) return res.status(404).send('Usuário não encontrado');
+
+            // normaliza conhecimentos selecionados (name="conhecimentos[]")
+            let conhecimentos = req.body.conhecimentos || [];
+            if (!Array.isArray(conhecimentos)) {
+                conhecimentos = conhecimentos ? [conhecimentos] : [];
+            }
+            // escalas podem chegar como objeto escala[<id>]=value ou como array escala[]
+            const escalasRaw = req.body.escala || req.body.escalaValor || {};
+
+            const normalizeEscala = (conhecimentoId, idx) => {
+                if (Array.isArray(escalasRaw)) {
+                    return parseInt(escalasRaw[idx] ?? 0, 10) || 0;
+                }
+                if (typeof escalasRaw === 'object') {
+                    // procura por chave numérica ou string do id ou por índice
+                    return parseInt(escalasRaw[conhecimentoId] ?? escalasRaw[String(conhecimentoId)] ?? escalasRaw[idx] ?? 0, 10) || 0;
+                }
+                return parseInt(escalasRaw || 0, 10) || 0;
+            };
+
+            // remove todas associações anteriores e recria conforme seleção
+            if (db.ConhecimentoUsuario) {
+                await db.ConhecimentoUsuario.destroy({ where: { usuarioId: usuario.id } });
+
+                const toCreate = conhecimentos
+                    .map((rawId, idx) => {
+                        const cid = parseInt(rawId, 10);
+                        if (isNaN(cid)) return null;
+                        const escala = normalizeEscala(cid, idx);
+                        return { usuarioId: usuario.id, conhecimentoId: cid, escala };
+                    })
+                    .filter(x => x !== null);
+
+                if (toCreate.length) await db.ConhecimentoUsuario.bulkCreate(toCreate);
+            } else if (typeof usuario.setConhecimentos === 'function') {
+                // fallback: se usar belongsToMany sem model explícito não consegue armazenar escala no through
+                const ids = conhecimentos.map(x => parseInt(x, 10)).filter(n => !isNaN(n));
+                await usuario.setConhecimentos(ids);
+            }
+
+            return res.redirect('/usuarioList');
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send('Erro ao atualizar usuário');
+        }
     },
     async getDelete(req, res) {
         await db.Usuario.destroy({ where: { id: req.params.id } }).then(

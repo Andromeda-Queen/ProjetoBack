@@ -1,16 +1,54 @@
 <form action="/usuarioUpdate" method="post">
-    <input type="hidden" name="id" value={{usuario.id}}>
-    <div class="form-group">
-        <label for="inputLogin">Login</label>
-        <input type="text" class="form-control" id="inputLogin" name="login" value="{{usuario.login}}">
-    </div>
-    <div class="form-group">
-        <label for="inputSenha">Senha</label>
-        <input type="text" class="form-control" id="inputSenha" name="senha"  value="{{usuario.senha}}">
-    </div>
-    <div class="form-group">
-        <label for="inputTipo">Tipo</label>
-        <input type="number" class="form-control" id="inputTipo" name="tipo"  value="{{usuario.tipo}}">
-    </div>
-    <button type="submit" class="btn btn-primary">Editar</button>
+  <input type="hidden" name="id" value="{{usuario.id}}">
+
+  <div class="mb-3">
+    <label for="login" class="form-label">Login</label>
+    <input id="login" name="login" class="form-control" value="{{usuario.login}}">
+  </div>
+
+  <div class="mb-3">
+    <label for="senha" class="form-label">Senha</label>
+    <input id="senha" name="senha" type="password" class="form-control" value="{{usuario.senha}}">
+  </div>
+
+  <div class="mb-3">
+    <label for="tipo" class="form-label">Tipo</label>
+    <input id="tipo" name="tipo" class="form-control" value="{{usuario.tipo}}">
+  </div>
+
+  <hr>
+  <h5>Conhecimentos</h5>
+  <div class="row">
+    {{#each conhecimentos}}
+      <div class="col-12 col-md-6 mb-2">
+        <div class="d-flex align-items-center">
+          <div class="form-check flex-grow-1">
+            <input class="form-check-input" type="checkbox"
+                   id="conhecimento-{{id}}"
+                   name="conhecimentos[]"
+                   value="{{id}}"
+                   {{#if selected}}checked{{/if}}>
+            <label class="form-check-label ms-2" for="conhecimento-{{id}}">
+              {{conhecimento}} <!-- ajuste o campo conforme seu model (ex: nome, conhecimento, palavraChave) -->
+            </label>
+          </div>
+
+          <div class="ms-3" style="width:110px;">
+            <label for="escala-{{id}}" class="form-label small mb-0">Escala</label>
+            <input id="escala-{{id}}"
+                   name="escala[{{id}}]"
+                   type="number"
+                   class="form-control form-control-sm"
+                   min="0" max="10"
+                   value="{{escala}}">
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="/usuarioList" class="btn btn-secondary ms-2">Cancelar</a>
+  </div>
 </form>
