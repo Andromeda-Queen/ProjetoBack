@@ -32,10 +32,35 @@ module.exports = {
         });
     },
     async getCreate(req, res) {
-        res.render('usuario/usuarioCreate');
+        const conhecimentos = await db.Conhecimento.findAll();
+        res.render('usuario/usuarioCreate', {
+            conhecimentos: conhecimentos.map(item => item.toJSON())
+        });
+        // res.render('usuario/usuarioCreate');
     },
     async postCreate(req, res) {
-        db.Usuario.create(req.body).then(() => {
+        db.Usuario.create(req.body).then((usuarioCriado) => {
+            var conhecimentos = req.body.conhecimentos;
+            var escalas = req.body.escala || {};
+
+            if (!conhecimentos) {
+                conhecimentos = [];
+            } else if (!Array.isArray(conhecimentos)) {
+                conhecimentos = [conhecimentos];
+            }
+
+            for (var i = 0; i < conhecimentos.length; i++) {
+                var id = conhecimentos[i];
+                var escala = escalas[id];
+                if (!escala) {
+                    escala = 0;
+                }
+                db.ConhecimentoUsuario.create({
+                    usuarioId: usuarioCriado.id,
+                    conhecimentoId: id,
+                    escala: escala
+                });
+            }
             res.redirect('/usuarioList');
         }).catch((err) => {
             console.log(err);
@@ -43,12 +68,14 @@ module.exports = {
     },
     async getList(req, res) {
         try {
+            const conhecimentosUsuario = await db.ConhecimentoUsuario.findAll();
             const usuarios = await db.Usuario.findAll({
                 limit: 10,                         // limita a 10 resultados
                 offset: 0                          // começa do primeiro
             });
 
             res.render('usuario/usuarioList', {
+                conhecimentosUsuario: conhecimentosUsuario.map(item => item.toJSON()),
                 usuarios: usuarios.map(user => user.toJSON())
             });
         } catch (err) {

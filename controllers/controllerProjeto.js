@@ -14,7 +14,7 @@ module.exports = {
         const {nome, linkExterno, resumo} = req.body;
         db.Projeto.create({nome, linkExterno, resumo})
             .then(() => {
-                res.redirect('projetoList')
+                res.redirect('/projetoList')
             })
             .catch((err) => {
                 console.log(err);
