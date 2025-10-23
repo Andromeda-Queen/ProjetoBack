@@ -18,13 +18,20 @@
         <td>{{senha}}</td>
         <td>{{tipo}}</td>
         <td>
-          {{#each ../conhecimentosUsuario}}
-            {{#ifDoisArgumentos usuarioId ../id}}
+          {{#if conhecimentos}}
+            {{#each conhecimentos}}
               <div>
-                Conhecimento ID: {{conhecimentoId}} - Escala: {{escala}}
+                {{#if conhecimentoNome}}
+                  {{conhecimentoNome}}
+                {{else}}
+                  <em>Nome não disponível</em>
+                {{/if}}
+                - Escala: {{escala}}
               </div>
-            {{/ifDoisArgumentos}}
-          {{/each}}
+            {{/each}}
+          {{else}}
+            <em>Sem conhecimentos</em>
+          {{/if}}
         </td>
         {{#if ../admin}}
           <td><a href="usuarioUpdate/{{id}}">Editar</a></td>

@@ -32,6 +32,10 @@ db.Conhecimento.belongsToMany(db.Usuario, {
   through: db.ConhecimentoUsuario
 });
 
+// <-- Adicione estas linhas para que o include funcione com os aliases usados no controller
+db.ConhecimentoUsuario.belongsTo(db.Conhecimento, { foreignKey: 'conhecimentoId', as: 'conhecimento' });
+db.ConhecimentoUsuario.belongsTo(db.Usuario, { foreignKey: 'usuarioId', as: 'usuario' });
+
 //Relação entre Projeto e PalavraChave
 db.ProjetoPalavraChave = require('../models/relational/ProjetoPalavraChave.js')(sequelize, Sequelize);
 db.PalavraChave.belongsToMany(db.Projeto, {

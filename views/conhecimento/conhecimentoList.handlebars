@@ -12,7 +12,7 @@
         {{#each conhecimento}}
         <tr>
             <th scope="row">{{conhecimento}}</th>
-            {{#if admin}}
+            {{#if ../admin}}
             <td><a href="conhecimentoUpdate/{{id}}">Editar</a></td>
             <td><a href="conhecimentoDelete/{{id}}">Deletar</a></td>
             {{/if}}

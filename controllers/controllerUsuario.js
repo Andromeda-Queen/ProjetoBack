@@ -39,44 +39,92 @@ module.exports = {
         // res.render('usuario/usuarioCreate');
     },
     async postCreate(req, res) {
-        db.Usuario.create(req.body).then((usuarioCriado) => {
-            var conhecimentos = req.body.conhecimentos;
-            var escalas = req.body.escala || {};
+        try {
+            const usuarioCriado = await db.Usuario.create(req.body);
 
-            if (!conhecimentos) {
-                conhecimentos = [];
-            } else if (!Array.isArray(conhecimentos)) {
-                conhecimentos = [conhecimentos];
+            let conhecimentos = req.body.conhecimentos || [];
+            let escalas = req.body.escala || {};
+
+            // normaliza conhecimentos para array
+            if (!Array.isArray(conhecimentos)) {
+                conhecimentos = conhecimentos ? [conhecimentos] : [];
             }
 
-            for (var i = 0; i < conhecimentos.length; i++) {
-                var id = conhecimentos[i];
-                var escala = escalas[id];
-                if (!escala) {
-                    escala = 0;
+            // cria todos os relacionamento garantindo correspondência entre conhecimento e escala
+            const promises = conhecimentos.map((rawId, idx) => {
+                const conhecimentoId = parseInt(rawId, 10);
+                let escala = 0;
+                if (escalas) {
+                    if (Array.isArray(escalas)) {
+                        escala = parseInt(escalas[idx] ?? 0, 10);
+                    } else if (typeof escalas === 'object') {
+                        escala = parseInt(escalas[conhecimentoId] ?? escalas[idx] ?? escalas[String(conhecimentoId)] ?? 0, 10);
+                    } else {
+                        escala = parseInt(escalas || 0, 10);
+                    }
                 }
-                db.ConhecimentoUsuario.create({
+                if (isNaN(escala)) escala = 0;
+
+                return db.ConhecimentoUsuario.create({
                     usuarioId: usuarioCriado.id,
-                    conhecimentoId: id,
+                    conhecimentoId: conhecimentoId,
                     escala: escala
                 });
-            }
-            res.redirect('/usuarioList');
-        }).catch((err) => {
+            });
+
+            await Promise.all(promises);
+
+            return res.redirect('/usuarioList');
+        } catch (err) {
             console.log(err);
-        });
+            return res.status(500).send('Erro ao criar usuário');
+        }
     },
     async getList(req, res) {
         try {
-            const conhecimentosUsuario = await db.ConhecimentoUsuario.findAll();
             const usuarios = await db.Usuario.findAll({
-                limit: 10,                         // limita a 10 resultados
-                offset: 0                          // começa do primeiro
+                limit: 10,
+                offset: 0
             });
 
+            const conhecimentosUsuario = await db.ConhecimentoUsuario.findAll({
+                include: [
+                    { model: db.Conhecimento, as: 'conhecimento' },
+                    { model: db.Usuario, as: 'usuario' }
+                ]
+            });
+
+            const usuariosMap = new Map();
+            usuarios.forEach(u => {
+                usuariosMap.set(u.id, Object.assign(u.toJSON(), { conhecimentos: [] }));
+            });
+
+            conhecimentosUsuario.forEach(kv => {
+                const ku = kv.toJSON();
+                const uid = ku.usuarioId || (ku.usuario && ku.usuario.id);
+                // determina nome do conhecimento (vindo do include ou de um campo direto)
+                const nomeDoConhecimento = (ku.conhecimento && ku.conhecimento.conhecimento) || ku.nome || null;
+                const conhecimentoObj = {
+                    id: ku.conhecimentoId || (ku.conhecimento && ku.conhecimento.id) || null,
+                    conhecimentoNome: nomeDoConhecimento,
+                    escala: ku.escala || 0
+                };
+
+                if (usuariosMap.has(uid)) {
+                    usuariosMap.get(uid).conhecimentos.push(conhecimentoObj);
+                } else if (ku.usuario) {
+                    const userObj = Object.assign(
+                        (ku.usuario.toJSON ? ku.usuario.toJSON() : ku.usuario),
+                        { conhecimentos: [conhecimentoObj] }
+                    );
+                    usuariosMap.set(userObj.id, userObj);
+                }
+            });
+
+            const usuariosComConhecimentos = Array.from(usuariosMap.values());
+
             res.render('usuario/usuarioList', {
-                conhecimentosUsuario: conhecimentosUsuario.map(item => item.toJSON()),
-                usuarios: usuarios.map(user => user.toJSON())
+                usuarios: usuariosComConhecimentos
             });
         } catch (err) {
             console.log(err);
@@ -104,4 +152,4 @@ module.exports = {
             console.log(err);
         });
     }
-}   
+}
