@@ -9,9 +9,19 @@ module.exports = {
             palavrasChaveIds: palavrasChaveIds.map(palavraChave => palavraChave.toJSON())
         });
     },
+    // async postCreate(req, res) {
+    //     const {nome, linkExterno, resumo, palavraChaveId} = req.body;
+    //     db.Projeto.create({nome, linkExterno, resumo, palavraChaveId})
+    //         .then(() => {
+    //             res.redirect('/home')
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // },
     async postCreate(req, res) {
-        const {nome, linkExterno, resumo, palavraChaveId} = req.body;
-        db.Projeto.create({nome, linkExterno, resumo, palavraChaveId})
+        const {nome, linkExterno, resumo} = req.body;
+        db.Projeto.create({nome, linkExterno, resumo})
             .then(() => {
                 res.redirect('/home')
             })
@@ -21,7 +31,7 @@ module.exports = {
     },
     async getList(req, res) {
         db.Projeto.findAll().then(projetos => {
-            res.render('projetos/projetoList',
+            res.render('projeto/projetoList',
                 { projetos: projetos.map(projeto => projeto.toJSON()) });
         }).catch((err) => {
             console.log(err);
