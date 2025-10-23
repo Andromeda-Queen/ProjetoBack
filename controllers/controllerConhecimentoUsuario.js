@@ -8,7 +8,7 @@ module.exports = {
 
     async postCreate(req, res) {
         db.ConhecimentoUsuario.create({
-            usuarioId: res.locals.userId,              // vem da sessão (usuário logado)
+            usuarioId: req.body.usuarioId,              // vem da sessão (usuário logado)
             conhecimentoId: req.body.conhecimentoId,   // vem do formulário
             escala: req.body.escala                    // vem do formulário
         }

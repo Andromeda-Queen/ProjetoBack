@@ -39,7 +39,7 @@ module.exports = {
         // res.render('usuario/usuarioCreate');
     },
     async postCreate(req, res) {
-        db.Usuario.create(req.body).then(() => {
+        db.Usuario.create(req.body).then((usuarioCriado) => {
             var conhecimentos = req.body.conhecimentos;
             var escalas = req.body.escala || {};
 
@@ -56,7 +56,7 @@ module.exports = {
                     escala = 0;
                 }
                 db.ConhecimentoUsuario.create({
-                    usuarioId: req.session.userId,
+                    usuarioId: usuarioCriado.id,
                     conhecimentoId: id,
                     escala: escala
                 });
