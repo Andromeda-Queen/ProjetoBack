@@ -10,7 +10,7 @@ module.exports = {
         });
     },
     async postCreate(req, res) {
-        const {nome, linkExterno, resumo,} = req.body;
+        const {nome, linkExterno, resumo} = req.body;
         db.Projeto.create({nome, linkExterno, resumo})
             .then(() => {
                 res.redirect('projeto/projetoList')
@@ -21,18 +21,17 @@ module.exports = {
     },
     async getList(req, res) {
         try {
-                    const projetos = await db.Usuario.findAll({
-                        limit: 10,                         // limita a 10 resultados
-                        offset: 0                          // começa do primeiro
-                    });
-        
-                    res.render('projeto/projetoList', {
-                        projetos: projetos.map(user => user.toJSON())
-                    });
-                } catch (err) {
-                    console.log(err);
-                    res.status(500).send('Erro ao buscar projetos');
-                }
+            const projeto = await db.Projeto.findAll({
+                limit: 10,                         // limita a 10 resultados
+                offset: 0                          // começa do primeiro
+            });
+            res.render('projeto/projetoList', {
+                projetos: projeto.map(user => user.toJSON())
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(500).send('Erro ao buscar projetos');
+        }
         // db.Projeto.findAll().then(projetos => {
         //     res.render('projeto/projetoList',
         //         { projetos: projetos.map(projeto => projeto.toJSON()) });
