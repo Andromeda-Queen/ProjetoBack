@@ -4,16 +4,17 @@ const { getCreate } = require('./controllerProjeto');
 
 module.exports = {
     async getCreate(req, res) {
-        var palavrasChaveIds = await db.PalavraChave.findAll()
-        res.render('projeto/projetoCreate', {
-            palavrasChaveIds: palavrasChaveIds.map(palavraChave => palavraChave.toJSON())
-        });
+        try {
+            return res.render('projeto/projetoCreate');
+        } catch (err) {
+            console.error(err);
+        }
     },
     async postCreate(req, res) {
         const {nome, linkExterno, resumo} = req.body;
         db.Projeto.create({nome, linkExterno, resumo})
             .then(() => {
-                res.redirect('projeto/projetoList')
+                res.redirect('projetoList')
             })
             .catch((err) => {
                 console.log(err);
@@ -34,7 +35,7 @@ module.exports = {
         }
         // db.Projeto.findAll().then(projetos => {
         //     res.render('projeto/projetoList',
-        //         { projetos: projetos.map(projeto => projeto.toJSON()) });
+        //         { projetos: projeto.map(projeto => projeto.toJSON()) });
         // }).catch((err) => {
         //     console.log(err);
         // });
