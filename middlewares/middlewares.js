@@ -14,7 +14,7 @@ module.exports = {
         }
 
         // allow some public GET paths (use req.path so query string doesn't interfere)
-        const publicGetPaths = ['/', '/home', '/projetoList', '/palavraChave', '/relatorio'];
+    const publicGetPaths = ['/', '/home', '/projetoList', '/palavraChave', '/relatorio', '/projetoPorPalavra'];
         if (req.method === 'GET' && publicGetPaths.includes(req.path)) return next();
 
         // allow login POST

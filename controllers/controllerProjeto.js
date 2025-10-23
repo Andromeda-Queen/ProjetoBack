@@ -92,7 +92,43 @@ module.exports = {
             return res.status(500).send('Erro ao listar projetos');
         }
     },
-    
+
+    // mostra página pública para escolher palavra-chave e ver projetos vinculados
+    async getByPalavra(req, res) {
+        try {
+            const palavras = await db.PalavraChave.findAll();
+
+            const palavraId = req.query.palavraId ? parseInt(req.query.palavraId, 10) : null;
+            let projetos = [];
+
+            if (palavraId) {
+                // tenta incluir via associação se existir
+                if (db.Projeto && db.PalavraChave) {
+                    // busca projetos que estão associados via ProjetoPalavraChave
+                    const projetosRaw = await db.Projeto.findAll({
+                        include: [{ model: db.PalavraChave, as: 'palavrasChave', where: { id: palavraId } }]
+                    });
+                    projetos = projetosRaw.map(p => p.toJSON());
+                } else if (db.ProjetoPalavraChave) {
+                    // fallback: pesquisar na tabela de junção
+                    const joins = await db.ProjetoPalavraChave.findAll({ where: { palavraChaveId: palavraId } });
+                    const projetoIds = joins.map(j => j.projetoId);
+                    const projetosRaw = await db.Projeto.findAll({ where: { id: projetoIds } });
+                    projetos = projetosRaw.map(p => p.toJSON());
+                }
+            }
+
+            return res.render('projeto/projetoPorPalavra', {
+                palavras: palavras.map(p => p.toJSON()),
+                selecionada: palavraId,
+                projetos: projetos
+            });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send('Erro ao buscar projetos por palavra');
+        }
+    },
+
     // carrega projeto para edição e marca palavras-chave selecionadas
     async getUpdate(req, res) {
         try {

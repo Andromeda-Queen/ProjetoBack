@@ -1,0 +1,63 @@
+<div class="container projeto-por-palavra">
+    <div class="row">
+        <div class="col-md-4">
+            <h2 class="mb-3">Filtrar por Palavra-Chave</h2>
+            <form method="get" action="/projetoPorPalavra">
+                <div class="form-group">
+                    <label for="palavraId" class="form-label">Selecione uma palavra-chave</label>
+                    <select id="palavraId" name="palavraId" class="form-control" onchange="this.form.submit()">
+                        <option value="">-- selecione --</option>
+                        {{#each palavras}}
+                            <option value="{{id}}" {{#ifEquals id ../selecionada}}selected{{/ifEquals}}>{{palavraChave}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="mt-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <a href="/projetoPorPalavra" class="btn btn-outline-secondary">Limpar</a>
+                </div>
+            </form>
+
+            <hr />
+            <p class="text-muted small">Escolha uma palavra-chave para ver os projetos vinculados. Visitantes não precisam fazer login.</p>
+        </div>
+
+        <div class="col-md-8">
+            <h2 class="mb-3">Resultados</h2>
+            {{#if projetos}}
+                <div class="mb-2 text-muted">Projetos encontrados: <strong>{{projetos.length}}</strong></div>
+                <div class="row">
+                    {{#each projetos}}
+                        <div class="col-md-6 mb-3">
+                            <div class="card project-card h-100">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{nome}}</h5>
+                                    {{#if resumo}}
+                                        <p class="card-text text-truncate">{{resumo}}</p>
+                                    {{else}}
+                                        <p class="card-text text-muted"><em>Sem resumo</em></p>
+                                    {{/if}}
+
+                                    {{#if palavrasChave}}
+                                        <div class="mb-2 mt-auto">
+                                            {{#each palavrasChave}}
+                                                <span class="badge bg-info text-dark keyword-badge">{{palavraChave}}</span>
+                                            {{/each}}
+                                        </div>
+                                    {{/if}}
+
+                                    <div class="mt-2 d-flex justify-content-between align-items-center">
+                                        <a href="/projetoUpdate/{{id}}" class="btn btn-sm btn-outline-primary">Ver / Editar</a>
+                                        <a href="/projetoList" class="btn btn-sm btn-link">Ver todos</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            {{else}}
+                <div class="alert alert-info">Nenhum projeto encontrado para a palavra selecionada.</div>
+            {{/if}}
+        </div>
+    </div>
+</div>

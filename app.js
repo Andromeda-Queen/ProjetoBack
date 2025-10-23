@@ -24,6 +24,9 @@ app.engine('handlebars', handlebars.engine({
             }
             return options.inverse(this);
         },
+        ifEquals: function(a, b, options) {
+            return (a === b) ? options.fn(this) : options.inverse(this);
+        },
         includes: function(array, value) {
         return Array.isArray(array) && array.includes(value);
         }

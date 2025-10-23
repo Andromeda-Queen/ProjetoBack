@@ -67,6 +67,8 @@ route.get("/projetoList", controllerProjeto.getList);
 route.get("/projetoUpdate/:id", controllerProjeto.getUpdate);
 route.post("/projetoUpdate", controllerProjeto.postUpdate);
 route.get("/projetoDelete/:id", controllerProjeto.getDelete);
+// projetos por palavra
+route.get('/projetoPorPalavra', controllerProjeto.getByPalavra);
 
 //Controller Conhecimento
 route.get("/conhecimentoCreate", controllerConhecimento.getCreate);

@@ -192,6 +192,24 @@ center {
     background: linear-gradient(45deg, #764ba2, #667eea);
 }
 
+/* Styles for projetoPorPalavra view */
+.project-card {
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.keyword-badge {
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+.text-truncate {
+    max-height: 3.6em; /* approx 3 lines */
+    overflow: hidden;
+}
+
 /* Account icon (right side of navbar) */
 .navbar-account {
     display: flex;
