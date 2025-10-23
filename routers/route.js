@@ -21,10 +21,22 @@ module.exports = route;
 //Home
 route.get("/home", function (req, res) {
 
-    if (req.session.login) {
-        res.render('home')
+    // If request includes ?noLogin=true allow guest access to home
+    if (req.query && req.query.noLogin === 'true') {
+        // do not create a login session for guest; render home and pass any existing session info
+        return res.render('home', {
+            login: req.session ? req.session.login : undefined,
+            admin: req.session && req.session.tipo == 2
+        });
+    }
+
+    if (req.session && req.session.login) {
+        return res.render('home', {
+            login: req.session.login,
+            admin: req.session.tipo == 2
+        });
     } else {
-        res.redirect('/');
+        return res.redirect('/');
     }
 
 });
