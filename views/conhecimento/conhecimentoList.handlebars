@@ -1,0 +1,22 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Nome</th>
+            {{#if admin}}
+            <th scope="col">Editar</th>
+            <th scope="col">Deletar</th>
+            {{/if}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#each categorias}}
+        <tr>
+            <th scope="row">{{nome}}</th>
+            {{#if ../admin}}
+            <td><a href="categoriaUpdate/{{id}}">Editar</a></td>
+            <td><a href="categoriaDelete/{{id}}">Deletar</a></td>
+            {{/if}}
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
